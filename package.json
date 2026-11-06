@@ -1,0 +1,32 @@
+{
+  "name": "cse341",
+  "version": "1.0.0",
+  "description": "CSE 341 Web Services coursework",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec \"node --env-file=.env\" server.js",
+    "start": "node --env-file=.env server.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alejandradiazr/cse341.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/alejandradiazr/cse341/issues"
+  },
+  "homepage": "https://github.com/alejandradiazr/cse341#readme",
+  "dependencies": {
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.14.0",
+    "nodemon": "^3.1.14"
+  }
+}

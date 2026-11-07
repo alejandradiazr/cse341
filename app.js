@@ -29,4 +29,30 @@ app.get("/books", async (req, res) => {
     }
 });
 
+// Get a single book by ID
+app.get("/books/:id", async (req, res) => {
+    try {
+        const db = getDb();
+        const bookId = req.params.id;
+
+        const book = await db.collection("books").findOne({
+            id: bookId
+        });
+
+        if (!book) {
+            return res.status(404).json({
+                message: "Book not found."
+            });
+        }
+
+        return res.status(200).json(book);
+    } catch (error) {
+        console.error("Error retrieving book:", error);
+
+        return res.status(500).json({
+            message: "An unexpected error occurred while retrieving the book."
+        });
+    }
+});
+
 export default app;

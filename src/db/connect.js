@@ -9,7 +9,7 @@ export async function connectToDatabase() {
     try {
         await client.connect();
 
-        db = client.db("practice");
+        db = client.db(process.env.MONGODB_DB_NAME);
 
         console.log(`Connected to database: ${db.databaseName}`);
 

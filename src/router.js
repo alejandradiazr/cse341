@@ -1,5 +1,5 @@
+
 import { Router } from "express";
-import { getDb } from "./db/connect.js";
 
 import {
     getAllAuthors,
@@ -9,8 +9,15 @@ import {
     deleteAuthor
 } from "./controllers/authors.js";
 
-const router = Router();
+import {
+    getAllBooks,
+    getBookById,
+    createBook,
+    updateBook,
+    deleteBook
+} from "./controllers/books.js";
 
+const router = Router();
 
 /**
  * @swagger
@@ -87,6 +94,7 @@ router.post("/authors", createAuthor);
  *       500:
  *         description: Server error
  */
+
 // Get an author by ID
 router.get("/authors/:id", getAuthorById);
 
@@ -172,21 +180,51 @@ router.delete("/authors/:id", deleteAuthor);
  *       500:
  *         description: Server error
  */
+
 // Get all books
-router.get("/books", async (req, res) => {
-    try {
-        const db = getDb();
-        const books = await db.collection("books").find().toArray();
+router.get("/books", getAllBooks);
 
-        return res.status(200).json(books);
-    } catch (error) {
-        console.error("Error retrieving books:", error);
+/**
+ * @swagger
+ * /books:
+ *   post:
+ *     summary: Create a new book
+ *     tags: [Books]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *               - authorId
+ *               - title
+ *               - publicationDate
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 example: b4
+ *               authorId:
+ *                 type: string
+ *                 example: a1
+ *               title:
+ *                 type: string
+ *                 example: The Hobbit
+ *               publicationDate:
+ *                 type: string
+ *                 example: "1937-09-21"
+ *     responses:
+ *       201:
+ *         description: Book created successfully
+ *       400:
+ *         description: Invalid book data, duplicate ID, or author does not exist
+ *       500:
+ *         description: Server error
+ */
 
-        return res.status(500).json({
-            message: "An unexpected error occurred while retrieving books."
-        });
-    }
-});
+// Create a new book
+router.post("/books", createBook);
 
 /**
  * @swagger
@@ -209,30 +247,80 @@ router.get("/books", async (req, res) => {
  *       500:
  *         description: Server error
  */
+
 // Get a single book by ID
-router.get("/books/:id", async (req, res) => {
-    try {
-        const db = getDb();
-        const bookId = req.params.id;
+router.get("/books/:id", getBookById);
 
-        const book = await db.collection("books").findOne({
-            id: bookId
-        });
+/**
+ * @swagger
+ * /books/{id}:
+ *   put:
+ *     summary: Update a book
+ *     tags: [Books]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the book
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - authorId
+ *               - title
+ *               - publicationDate
+ *             properties:
+ *               authorId:
+ *                 type: string
+ *                 example: a2
+ *               title:
+ *                 type: string
+ *                 example: Animal Farm
+ *               publicationDate:
+ *                 type: string
+ *                 example: "1945-08-17"
+ *     responses:
+ *       200:
+ *         description: Book updated successfully
+ *       400:
+ *         description: Invalid book data or author does not exist
+ *       404:
+ *         description: Book not found
+ *       500:
+ *         description: Server error
+ */
 
-        if (!book) {
-            return res.status(404).json({
-                message: "Book not found."
-            });
-        }
+// Update a book
+router.put("/books/:id", updateBook);
 
-        return res.status(200).json(book);
-    } catch (error) {
-        console.error("Error retrieving book:", error);
+/**
+ * @swagger
+ * /books/{id}:
+ *   delete:
+ *     summary: Delete a book
+ *     tags: [Books]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the book
+ *     responses:
+ *       204:
+ *         description: Book deleted successfully
+ *       404:
+ *         description: Book not found
+ *       500:
+ *         description: Server error
+ */
 
-        return res.status(500).json({
-            message: "An unexpected error occurred while retrieving the book."
-        });
-    }
-});
+// Delete a book
+router.delete("/books/:id", deleteBook);
 
 export default router;

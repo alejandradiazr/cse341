@@ -204,6 +204,57 @@
             "description": "Server error"
           }
         }
+      },
+      "post": {
+        "summary": "Create a new book",
+        "tags": [
+          "Books"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "authorId",
+                  "title",
+                  "publicationDate"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "b4"
+                  },
+                  "authorId": {
+                    "type": "string",
+                    "example": "a1"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "The Hobbit"
+                  },
+                  "publicationDate": {
+                    "type": "string",
+                    "example": "1937-09-21"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Book created successfully"
+          },
+          "400": {
+            "description": "Invalid book data, duplicate ID, or author does not exist"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
       }
     },
     "/books/{id}": {
@@ -226,6 +277,94 @@
         "responses": {
           "200": {
             "description": "Book found"
+          },
+          "404": {
+            "description": "Book not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a book",
+        "tags": [
+          "Books"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the book"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "authorId",
+                  "title",
+                  "publicationDate"
+                ],
+                "properties": {
+                  "authorId": {
+                    "type": "string",
+                    "example": "a2"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "Animal Farm"
+                  },
+                  "publicationDate": {
+                    "type": "string",
+                    "example": "1945-08-17"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Book updated successfully"
+          },
+          "400": {
+            "description": "Invalid book data or author does not exist"
+          },
+          "404": {
+            "description": "Book not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a book",
+        "tags": [
+          "Books"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the book"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Book deleted successfully"
           },
           "404": {
             "description": "Book not found"
